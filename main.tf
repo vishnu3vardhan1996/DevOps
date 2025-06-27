@@ -37,6 +37,16 @@ variable "subnets" {
     ]
 }
 
+variable "firewall_rules" {
+    type = map(any)
+    default = {
+        80 = "10.0.0.0/19"
+        443 = "10.0.64.0/19"
+        8080 = "10.0.0.0/19"
+        9001 = "10.0.64.0/19"
+    }
+}
+
 resource "google_compute_network" "isolate_network" {
     name = "terraform-network"
     auto_create_subnetworks = false
@@ -49,6 +59,20 @@ resource "google_compute_subnetwork" "newsubnet" {
     region = "us-central1"
     description = each.value.descriptionvalue
     network = google_compute_network.isolate_network.id
+}
+
+resource "google_compute_firewall" "custom_firewall" {
+    name = "added-firewall"
+    network = google_compute_network.isolate_network.id
+
+    dynamic "allow" {
+        for_each = var.firewall_rules
+        content {
+            protocol = "tcp"
+            port = allow.key
+            destination_ranges = allow.value
+        }
+    }
 }
 
 # resource "google_compute_subnetwork" "newsubnet" {
