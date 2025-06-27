@@ -74,7 +74,7 @@ resource "google_compute_firewall" "custom_firewall" {
         }
     }
 
-    source_ranges = each.value
+    source_ranges = toset(each.value)
 }
 
 # resource "google_compute_subnetwork" "newsubnet" {
