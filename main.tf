@@ -40,10 +40,18 @@ variable "subnets" {
 variable "firewall_rules" {
     type = map(any)
     default = {
-        80 = "10.0.0.0/19"
-        443 = "10.0.64.0/19"
+        # 80 = "10.0.0.0/19"
+        # 443 = "10.0.64.0/19"
         # 8080 = "10.0.0.0/19"
         # 9001 = "10.0.64.0/19"
+        80 = {
+            name = "added-firewall-1"
+            destination = "10.0.0.0/19"
+        },
+        443 = {
+            name = "added-firewall-2"
+            destination = "10.0.64.0/19"
+        }
     }
 }
 
@@ -64,8 +72,8 @@ resource "google_compute_subnetwork" "newsubnet" {
 }
 
 resource "google_compute_firewall" "custom_firewall" {
-    for_each = { for port, cidr in var.firewall_rules: port => cidr }
-    name = "added-firewall"
+    for_each = { for port, value in var.firewall_rules: port => value }
+    name = each.value.name
     network = google_compute_network.isolate_network.id
 
     dynamic "allow" {
@@ -76,7 +84,7 @@ resource "google_compute_firewall" "custom_firewall" {
         }
     }
 
-    source_ranges = [each.value]
+    source_ranges = [each.value.destination]
 }
 
 # resource "google_compute_subnetwork" "newsubnet" {
