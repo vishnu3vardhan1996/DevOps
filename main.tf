@@ -29,7 +29,7 @@ variable "subnets" {
         },
         {
             name = "terraform-subnet2"
-            subnet = "192.0.0.0/19"
+            subnet = "10.0.64.0/19"
         }
     ]
 }
