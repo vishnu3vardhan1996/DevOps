@@ -1,3 +1,3 @@
 output "sample_variable" {
-    value = var.vishnu
+    value = google_compute_subnetwork.newsubnet[*].count
 }
