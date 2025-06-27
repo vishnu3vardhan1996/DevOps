@@ -42,11 +42,12 @@ variable "firewall_rules" {
     default = {
         80 = "10.0.0.0/19"
         443 = "10.0.64.0/19"
+        # 8080 = "10.0.0.0/19"
+        # 9001 = "10.0.64.0/19"
     }
 }
 
-        # 8080 = "10.0.0.0/19"
-        # 9001 = "10.0.64.0/19"
+
 
 resource "google_compute_network" "isolate_network" {
     name = "terraform-network"
