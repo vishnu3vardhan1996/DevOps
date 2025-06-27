@@ -16,3 +16,7 @@ variable "vishnu" {
     type = string
     default = "test"
 }
+
+resource "google_compute_network" "isolate_network" {
+    name = "terraform-network"
+}
