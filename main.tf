@@ -19,4 +19,5 @@ variable "vishnu" {
 
 resource "google_compute_network" "isolate_network" {
     name = "terraform-network"
+    auto_create_subnetworks = false
 }
