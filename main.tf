@@ -26,10 +26,12 @@ variable "subnets" {
         {
             name = "terraform-subnet1"
             subnet = "10.0.0.0/19"
+            description = "first subnet!"
         },
         {
             name = "terraform-subnet2"
             subnet = "10.0.64.0/19"
+            description = "second subnet!"
         }
     ]
 }
@@ -44,7 +46,7 @@ resource "google_compute_subnetwork" "newsubnet" {
     name = each.value.name
     ip_cidr_range = each.value.subnet
     region = "us-central1"
-    description = each.key
+    description = each.value.description
     network = google_compute_network.isolate_network.id
 }
 
