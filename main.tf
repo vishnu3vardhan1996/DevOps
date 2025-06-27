@@ -18,8 +18,20 @@ variable "vishnu" {
 }
 
 variable "subnets" {
-    type = list(string)
-    default = ["10.0.32.0/19", "10.0.0.0/19"]
+    type = list(object({
+        name = string
+        subnet = string
+    }))
+    default = [
+        {
+            name = "terraform-subnet1"
+            subnet = "10.0.0.0/19"
+        },
+        {
+            name = "terraform-subnet2"
+            subnet = "10.0.32.0/19"
+        }
+    ]
 }
 
 resource "google_compute_network" "isolate_network" {
@@ -28,9 +40,17 @@ resource "google_compute_network" "isolate_network" {
 }
 
 resource "google_compute_subnetwork" "newsubnet" {
-    for_each = toset(var.subnets)
-    name = "terraform-subnet"
-    ip_cidr_range = each.value
+    for_each = { for i, value in var.subnets: i => value }
+    name = each.value.name
+    ip_cidr_range = each.value.subnet
     region = "us-central1"
     network = google_compute_network.isolate_network.id
 }
+
+# resource "google_compute_subnetwork" "newsubnet" {
+#     for_each = toset(var.subnets)
+#     name = "terraform-subnet"
+#     ip_cidr_range = each.value
+#     region = "us-central1"
+#     network = google_compute_network.isolate_network.id
+# }
