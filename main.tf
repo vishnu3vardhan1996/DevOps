@@ -42,9 +42,9 @@ resource "google_compute_network" "isolate_network" {
 resource "google_compute_subnetwork" "newsubnet" {
     for_each = { for i, value in var.subnets: i => value }
     name = each.value.name
-    countno = each.key
     ip_cidr_range = each.value.subnet
     region = "us-central1"
+    description = each.key
     network = google_compute_network.isolate_network.id
 }
 

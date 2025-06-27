@@ -1,3 +1,3 @@
 output "sample_variable" {
-    value = google_compute_subnetwork.newsubnet[*].count
+    value = google_compute_subnetwork.newsubnet[*].description
 }
