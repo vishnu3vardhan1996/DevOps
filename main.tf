@@ -69,8 +69,8 @@ resource "google_compute_firewall" "custom_firewall" {
         for_each = var.firewall_rules
         content {
             protocol = "tcp"
-            port = allow.key
-            destination_ranges = allow.value
+            ports = allow.key
+            # destination_ranges = allow.value
         }
     }
 }
