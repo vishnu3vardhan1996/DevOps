@@ -28,9 +28,9 @@ resource "google_compute_network" "isolate_network" {
 }
 
 resource "google_compute_subnetwork" "newsubnet" {
-    for_each = ofset(var.subnet)
+    for_each = ofset(var.subnets)
     name = "terraform-subnet"
-    ip_cird_range = each.value
+    ip_cidr_range = each.value
     region = "us-central1-a"
     network = google_compute_network.isolate_network.id
 }
