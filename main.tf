@@ -1,6 +1,6 @@
 provider "google" {
-    region = "us-central1"
-    zone = "us-central1-a"
+    region = "us-east1"
+    zone = "us-east1-c"
 }
 
 terraform {
@@ -40,10 +40,6 @@ variable "subnets" {
 variable "firewall_rules" {
     type = map(any)
     default = {
-        # 80 = "10.0.0.0/19"
-        # 443 = "10.0.64.0/19"
-        # 8080 = "10.0.0.0/19"
-        # 9001 = "10.0.64.0/19"
         80 = {
             name = "added-firewall-1"
             destination = "10.0.0.0/19"
@@ -66,7 +62,7 @@ resource "google_compute_subnetwork" "newsubnet" {
     for_each = { for i, value in var.subnets: i => value }
     name = each.value.name
     ip_cidr_range = each.value.subnet
-    region = "us-central1"
+    region = "us-east1"
     description = each.value.descriptionvalue
     network = google_compute_network.isolate_network.id
 }
@@ -86,11 +82,3 @@ resource "google_compute_firewall" "custom_firewall" {
 
     source_ranges = [each.value.destination]
 }
-
-# resource "google_compute_subnetwork" "newsubnet" {
-#     for_each = toset(var.subnets)
-#     name = "terraform-subnet"
-#     ip_cidr_range = each.value
-#     region = "us-central1"
-#     network = google_compute_network.isolate_network.id
-# }
