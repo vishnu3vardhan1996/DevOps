@@ -42,8 +42,8 @@ variable "firewall_rules" {
     default = {
         80 = "10.0.0.0/19"
         443 = "10.0.64.0/19"
-        8080 = "10.0.0.0/19"
-        9001 = "10.0.64.0/19"
+        # 8080 = "10.0.0.0/19"
+        # 9001 = "10.0.64.0/19"
     }
 }
 
@@ -62,6 +62,7 @@ resource "google_compute_subnetwork" "newsubnet" {
 }
 
 resource "google_compute_firewall" "custom_firewall" {
+    for_each = { for port, cidr in var.firewall_rules: port => cidr }
     name = "added-firewall"
     network = google_compute_network.isolate_network.id
 
@@ -72,6 +73,8 @@ resource "google_compute_firewall" "custom_firewall" {
             ports = [tostring(allow.key)]
         }
     }
+
+    source_ranges = each.value
 }
 
 # resource "google_compute_subnetwork" "newsubnet" {
